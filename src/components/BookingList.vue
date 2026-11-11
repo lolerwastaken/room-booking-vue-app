@@ -11,13 +11,14 @@
     <div v-if="bookings.length === 0" class="empty-state">
       <div class="empty-icon">📅</div>
       <h3>No bookings yet</h3>
-      <p>Click "Create Reservation" on the header to add your first room entry.</p>
+      <p>Click "+ Create Reservation" on the header to add your first room entry.</p>
     </div>
 
     <div v-else class="table-responsive">
       <table class="custom-table">
         <thead>
           <tr>
+            <th>Image</th>
             <th>Location</th>
             <th>Room</th>
             <th>Reserved By</th>
@@ -28,6 +29,15 @@
         </thead>
         <tbody>
           <tr v-for="b in bookings" :key="b.id">
+            <td class="attachment-cell">
+              <div class="thumbnail-wrapper">
+                <img 
+                  :src="b.image_url || defaultImage" 
+                  alt="Booking thumbnail" 
+                  class="thumbnail-img" 
+                />
+              </div>
+            </td>
             <td class="location-cell">{{ b.location || 'Main Campus' }}</td>
             <td class="room-cell">
               <span class="room-pill">{{ b.room_name }}</span>
@@ -56,6 +66,9 @@
 defineProps({
   bookings: { type: Array, required: true }
 })
+
+// Clean Unsplash room fallback image used whenever no custom upload exists
+const defaultImage = 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=150&q=80'
 </script>
 
 <style scoped>
@@ -66,14 +79,17 @@ defineProps({
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
   border: 1px solid #e2e8f0;
 }
+
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 }
+
 .card-header h2 { font-size: 1.35rem; font-weight: 700; color: #0f172a; }
 .card-header p { font-size: 0.85rem; color: #64748b; }
+
 .badge-count {
   background-color: #e0e7ff;
   color: #4338ca;
@@ -82,6 +98,7 @@ defineProps({
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
 }
+
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
@@ -89,9 +106,13 @@ defineProps({
   border-radius: 12px;
   border: 2px dashed #cbd5e1;
 }
+
 .empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
 .table-responsive { overflow-x: auto; }
+
 .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+
 .custom-table th {
   background-color: #f8fafc;
   color: #475569;
@@ -102,13 +123,38 @@ defineProps({
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
 }
-.custom-table td { padding: 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+
+.custom-table td { 
+  padding: 1rem; 
+  border-bottom: 1px solid #f1f5f9; 
+  font-size: 0.9rem; 
+  vertical-align: middle; 
+}
+
+.attachment-cell { width: 70px; }
+
+.thumbnail-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  background-color: #f1f5f9;
+}
+
+.thumbnail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .location-cell { font-weight: 600; color: #4f46e5; }
 .room-pill { font-weight: 600; background: #f1f5f9; padding: 0.3rem 0.6rem; border-radius: 6px; }
 .time-wrapper { display: flex; flex-direction: column; }
 .date-text { font-weight: 600; }
 .time-text { font-size: 0.8rem; color: #64748b; }
-.purpose-cell { max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #64748b; }
+.purpose-cell { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #64748b; }
+
 .status-pill { padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
 .status-pill.confirmed { background-color: #dcfce7; color: #15803d; }
 </style>
