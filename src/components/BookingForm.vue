@@ -1,90 +1,115 @@
 <template>
-  <div class="card form-card">
-    <div class="card-header">
-      <h2>Reserve a Space</h2>
-      <p>Submit room details to schedule your meeting</p>
-    </div>
+  <div v-if="isOpen" class="modal-overlay" @click.self="closeModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h2>Reserve a Space</h2>
+          <p>Submit room details to schedule your meeting</p>
+        </div>
+        <button class="btn-close" @click="closeModal">&times;</button>
+      </div>
 
-    <form @submit.prevent="handleSubmit" class="booking-form">
-      <div class="form-group">
-        <label for="room_name">Select Room</label>
-        <div class="input-wrapper">
-          <select id="room_name" v-model="form.room_name" required>
-            <option value="" disabled>Choose an available room</option>
-            <option value="Meeting Room A">Meeting Room A (Cap: 8)</option>
-            <option value="Meeting Room B">Meeting Room B (Cap: 12)</option>
-            <option value="Auditorium">Auditorium (Cap: 100)</option>
-            <option value="Study Pod 1">Study Pod 1 (Cap: 2)</option>
+      <form @submit.prevent="handleSubmit" class="booking-form">
+        <div class="form-group">
+          <label for="location">Meeting Location</label>
+          <select id="location" v-model="form.location" required @change="form.room_name = ''">
+            <option value="" disabled>Select campus location</option>
+            <option v-for="loc in locations" :key="loc.id" :value="loc.name">
+              {{ loc.name }} ({{ loc.city }})
+            </option>
           </select>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="booked_by">Reserved By</label>
-        <input 
-          id="booked_by" 
-          type="text" 
-          v-model="form.booked_by" 
-          placeholder="e.g., Alex Johnson" 
-          required 
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="booking_date">Date</label>
-        <input 
-          id="booking_date" 
-          type="date" 
-          v-model="form.booking_date" 
-          required 
-        />
-      </div>
-
-      <div class="form-row">
         <div class="form-group">
-          <label for="start_time">Start Time</label>
+          <label for="room_name">Specific Room</label>
+          <select id="room_name" v-model="form.room_name" :disabled="!form.location" required>
+            <option value="" disabled>Choose an available room</option>
+            <option 
+              v-for="room in availableRooms" 
+              :key="room" 
+              :value="room"
+            >
+              {{ room }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="booked_by">Reserved By</label>
           <input 
-            id="start_time" 
-            type="time" 
-            v-model="form.start_time" 
+            id="booked_by" 
+            type="text" 
+            v-model="form.booked_by" 
+            placeholder="e.g., Alex Johnson" 
             required 
           />
         </div>
+
         <div class="form-group">
-          <label for="end_time">End Time</label>
+          <label for="booking_date">Date</label>
           <input 
-            id="end_time" 
-            type="time" 
-            v-model="form.end_time" 
+            id="booking_date" 
+            type="date" 
+            v-model="form.booking_date" 
             required 
           />
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="purpose">Purpose / Agenda</label>
-        <textarea 
-          id="purpose" 
-          v-model="form.purpose" 
-          placeholder="Brief description of the event or meeting..." 
-          rows="3"
-        ></textarea>
-      </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="start_time">Start Time</label>
+            <input 
+              id="start_time" 
+              type="time" 
+              v-model="form.start_time" 
+              required 
+            />
+          </div>
+          <div class="form-group">
+            <label for="end_time">End Time</label>
+            <input 
+              id="end_time" 
+              type="time" 
+              v-model="form.end_time" 
+              required 
+            />
+          </div>
+        </div>
 
-      <button type="submit" class="btn-submit" :disabled="submitting">
-        <span>{{ submitting ? 'Processing...' : 'Confirm Booking' }}</span>
-      </button>
-    </form>
+        <div class="form-group">
+          <label for="purpose">Purpose / Agenda</label>
+          <textarea 
+            id="purpose" 
+            v-model="form.purpose" 
+            placeholder="Brief description of the event..." 
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" @click="closeModal">Cancel</button>
+          <button type="submit" class="btn-submit" :disabled="submitting">
+            {{ submitting ? 'Saving...' : 'Confirm Reservation' }}
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
-const emit = defineEmits(['add-booking'])
+const props = defineProps({
+  isOpen: Boolean,
+  locations: Array
+})
+
+const emit = defineEmits(['close', 'add-booking'])
 
 const submitting = ref(false)
 const form = ref({
+  location: '',
   room_name: '',
   booked_by: '',
   booking_date: '',
@@ -93,11 +118,21 @@ const form = ref({
   purpose: ''
 })
 
-const handleSubmit = async () => {
+const availableRooms = computed(() => {
+  const loc = props.locations.find(l => l.name === form.value.location)
+  return loc ? loc.rooms : []
+})
+
+const closeModal = () => {
+  emit('close')
+}
+
+const handleSubmit = () => {
   submitting.value = true
   emit('add-booking', { ...form.value })
   
   form.value = {
+    location: '',
     room_name: '',
     booked_by: '',
     booking_date: '',
@@ -106,44 +141,73 @@ const handleSubmit = async () => {
     purpose: ''
   }
   submitting.value = false
+  closeModal()
 }
 </script>
 
 <style scoped>
-.form-card {
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-card {
   background: #ffffff;
   border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
   padding: 1.75rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
   border: 1px solid #e2e8f0;
 }
 
-.card-header {
-  margin-bottom: 1.5rem;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
 }
 
-.card-header h2 {
-  font-size: 1.35rem;
+.modal-header h2 {
+  font-size: 1.25rem;
   font-weight: 700;
   color: #0f172a;
 }
 
-.card-header p {
+.modal-header p {
   font-size: 0.85rem;
   color: #64748b;
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #94a3b8;
+  cursor: pointer;
 }
 
 .booking-form {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 0.9rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .form-row {
@@ -153,55 +217,52 @@ const handleSubmit = async () => {
 }
 
 label {
-  font-size: 0.825rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   color: #334155;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
 }
 
 input, select, textarea {
   width: 100%;
-  padding: 0.65rem 0.85rem;
+  padding: 0.6rem 0.8rem;
   border: 1.5px solid #cbd5e1;
   border-radius: 8px;
-  font-size: 0.925rem;
-  color: #1e293b;
+  font-size: 0.9rem;
   background-color: #f8fafc;
-  transition: all 0.2s ease-in-out;
 }
 
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: #4f46e5;
   background-color: #ffffff;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.btn-cancel {
+  padding: 0.6rem 1.1rem;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border-radius: 8px;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .btn-submit {
-  margin-top: 0.5rem;
-  padding: 0.85rem;
+  padding: 0.6rem 1.2rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
   color: #ffffff;
   font-weight: 600;
-  font-size: 0.95rem;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.btn-submit:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
-}
-
-.btn-submit:active {
-  transform: translateY(0);
-}
-
-.btn-submit:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
 }
 </style>

@@ -25,7 +25,7 @@
 
       <div class="nav-right">
         <button class="btn-create" @click="isModalOpen = true">
-          <span>+ Create Reservation</span>
+          + Create Reservation
         </button>
       </div>
     </nav>
@@ -37,14 +37,14 @@
         :bookings="bookings" 
       />
 
-      <LocationCatalog 
+      <MeetingLocations 
         v-else-if="currentPage === 'locations'" 
         :locations="locations" 
       />
     </main>
 
-    <!-- Room Booking Modal Popup -->
-    <BookingFormModal 
+    <!-- Room Booking Popup Overlay -->
+    <BookingForm 
       :is-open="isModalOpen" 
       :locations="locations" 
       @close="isModalOpen = false" 
@@ -55,15 +55,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import BookingFormModal from './components/BookingFormModal.vue'
+import BookingForm from './components/BookingForm.vue'
 import BookingList from './components/BookingList.vue'
-import LocationCatalog from './components/LocationCatalog.vue'
+import MeetingLocations from './components/MeetingLocations.vue'
 import { supabase } from './lib/supabaseClient'
 
-const currentPage = ref('dashboard') // 'dashboard' | 'locations'
+const currentPage = ref('dashboard')
 const isModalOpen = ref(false)
 
-// Sample Meeting Locations Dataset
 const locations = ref([
   {
     id: 1,
@@ -203,12 +202,18 @@ body {
   background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
   color: #ffffff;
   border: none;
-  padding: 0.6rem 1.1rem;
+  padding: 0.65rem 1.2rem;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.875rem;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-create:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
 }
 
 .dashboard-container {
