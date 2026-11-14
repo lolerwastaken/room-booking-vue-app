@@ -4,7 +4,9 @@
       <div class="nav-left">
         <div class="nav-brand" @click="currentPage = 'dashboard'">
           <img src="./assets/7080840.png" class="web-logo" />
+          <link rel="icon" type="image/x-icon" href="/favicon.ico" />
           <span class="web-name">CUreserve</span>
+
         </div>
         <div class="nav-links">
           <button 
