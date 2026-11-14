@@ -18,7 +18,7 @@
       <table class="custom-table">
         <thead>
           <tr>
-            <th>Image</th>
+            <th> </th>
             <th>Location</th>
             <th>Room</th>
             <th>Reserved By</th>
@@ -63,12 +63,11 @@
 </template>
 
 <script setup>
+import defaultImage from '../assets/defaultImage.png'
+
 defineProps({
   bookings: { type: Array, required: true }
 })
-
-// Clean Unsplash room fallback image used whenever no custom upload exists
-const defaultImage = 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=150&q=80'
 </script>
 
 <style scoped>
@@ -131,12 +130,14 @@ const defaultImage = 'https://images.unsplash.com/photo-1497366216548-3752607029
   vertical-align: middle; 
 }
 
-.attachment-cell { width: 70px; }
+.attachment-cell { 
+  width: 110px; 
+}
 
 .thumbnail-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
+  width: 84px;
+  height: 84px;
+  border-radius: 10px;
   overflow: hidden;
   border: 1px solid #e2e8f0;
   background-color: #f1f5f9;
@@ -148,13 +149,50 @@ const defaultImage = 'https://images.unsplash.com/photo-1497366216548-3752607029
   object-fit: cover;
 }
 
-.location-cell { font-weight: 600; color: #4f46e5; }
-.room-pill { font-weight: 600; background: #f1f5f9; padding: 0.3rem 0.6rem; border-radius: 6px; }
-.time-wrapper { display: flex; flex-direction: column; }
-.date-text { font-weight: 600; }
-.time-text { font-size: 0.8rem; color: #64748b; }
-.purpose-cell { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #64748b; }
+.location-cell { 
+  font-weight: 600; 
+  color: #4f46e5; 
+}
 
-.status-pill { padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
-.status-pill.confirmed { background-color: #dcfce7; color: #15803d; }
+.room-pill { 
+  font-weight: 600; 
+  background: #f1f5f9; 
+  padding: 0.3rem 0.6rem; 
+  border-radius: 6px; 
+}
+
+.time-wrapper { 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.date-text { 
+  font-weight: 600; 
+}
+
+.time-text { 
+  font-size: 0.8rem; 
+  color: #64748b; 
+}
+
+.purpose-cell {
+  max-width: 240px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+  color: #64748b;
+}
+
+.status-pill { 
+  padding: 0.25rem 0.65rem; 
+  border-radius: 9999px; 
+  font-size: 0.75rem; 
+  font-weight: 600; 
+}
+
+.status-pill.confirmed { 
+  background-color: #dcfce7; 
+  color: #15803d; 
+  }
 </style>

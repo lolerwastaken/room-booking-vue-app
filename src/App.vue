@@ -32,10 +32,14 @@
     </nav>
 
     <main class="dashboard-container">
-      <BookingList 
-        v-if="currentPage === 'dashboard'" 
-        :bookings="bookings" 
-      />
+      <div v-if="currentPage === 'dashboard'">
+        <header class="dashboard-hero">
+          <h1>Welcome to CUreserve!</h1>
+          <p>Browse active room bookings, check space availability, and reserve meeting rooms across several facilities within Chulalongkorn University.</p>
+        </header>
+
+        <BookingList :bookings="bookings" />
+      </div>
 
       <MeetingLocations 
         v-else-if="currentPage === 'locations'" 
@@ -236,6 +240,28 @@ body {
 .web-logo {
   width: 50px;
   height: 50px;
+}
+
+.dashboard-hero {
+  text-align: center;
+  max-width: 640px;
+  margin: 0.5rem auto 2.25rem auto;
+}
+
+.dashboard-hero h1 {
+  font-size: 3.25rem;
+  font-weight: 800;
+  color: #fd62fd;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(165, 165, 165, 0.604);
+}
+
+.dashboard-hero p {
+  font-size: 1rem;
+  color: #57667a;
+  margin-top: 0.5rem;
+  line-height: 1.5;
 }
 
 </style>

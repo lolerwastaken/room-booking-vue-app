@@ -10,92 +10,46 @@
       </div>
 
       <form @submit.prevent="handleSubmit" class="booking-grid-form">
-        <!-- Left Side: Large Image Upload Square -->
-        <div class="image-upload-section">
-          <label class="upload-label">Attachment Preview</label>
-          <div 
-            class="image-square-dropzone" 
-            @click="triggerFileInput"
-          >
-            <img 
-              v-if="imagePreview" 
-              :src="imagePreview" 
-              alt="Attachment preview" 
-              class="uploaded-square-img" 
-            />
-            <div v-else class="upload-placeholder">
-              <div class="upload-icon-circle">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-              </div>
-              <span class="upload-title">Click to Upload Image</span>
-              <span class="upload-subtitle">PNG, JPG, or GIF (up to 5MB)</span>
-            </div>
-            <button 
-              v-if="imagePreview" 
-              type="button" 
-              class="btn-remove-square" 
-              @click.stop="removeImage"
+
+        <div class="left-column-section">
+          <div class="image-upload-section">
+            <label class="upload-label">Attachment Preview (OPTIONAL)</label>
+            <div 
+              class="image-square-dropzone" 
+              @click="triggerFileInput"
             >
-              &times;
-            </button>
-          </div>
-          <input 
-            ref="fileInputRef" 
-            type="file" 
-            accept="image/*" 
-            class="hidden-file-input" 
-            @change="handleImageUpload" 
-          />
-        </div>
-
-        <!-- Right Side: Booking Details Form -->
-        <div class="form-fields-section">
-          <div class="form-group">
-            <label for="location">Meeting Location</label>
-            <select id="location" v-model="form.location" required @change="form.room_name = ''">
-              <option value="" disabled>Select campus location</option>
-              <option v-for="loc in locations" :key="loc.id" :value="loc.name">
-                {{ loc.name }} ({{ loc.city }})
-              </option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="room_name">Specific Room</label>
-            <select id="room_name" v-model="form.room_name" :disabled="!form.location" required>
-              <option value="" disabled>Choose an available room</option>
-              <option 
-                v-for="room in availableRooms" 
-                :key="room" 
-                :value="room"
+              <img 
+                v-if="imagePreview" 
+                :src="imagePreview" 
+                alt="Attachment preview" 
+                class="uploaded-square-img" 
+              />
+              <div v-else class="upload-placeholder">
+                <div class="upload-icon-circle">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+                <span class="upload-title">Upload Image</span>
+                <span class="upload-subtitle">PNG, JPG, or GIF (up to 5MB)</span>
+              </div>
+              <button 
+                v-if="imagePreview" 
+                type="button" 
+                class="btn-remove-square" 
+                @click.stop="removeImage"
               >
-                {{ room }}
-              </option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="booked_by">Reserved By</label>
+                &times;
+              </button>
+            </div>
             <input 
-              id="booked_by" 
-              type="text" 
-              v-model="form.booked_by" 
-              placeholder="e.g., Alex Johnson" 
-              required 
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="booking_date">Date</label>
-            <input 
-              id="booking_date" 
-              type="date" 
-              v-model="form.booking_date" 
-              required 
+              ref="fileInputRef" 
+              type="file" 
+              accept="image/*" 
+              class="hidden-file-input" 
+              @change="handleImageUpload" 
             />
           </div>
 
@@ -119,14 +73,65 @@
               />
             </div>
           </div>
+        </div>
+
+        <div class="form-fields-section">
+          <div class="form-group">
+            <label for="location">Meeting Location</label>
+            <select id="location" v-model="form.location" required @change="form.room_name = ''">
+              <option value="" disabled>Select meeting location...</option>
+              <option v-for="loc in locations" :key="loc.id" :value="loc.name">
+                {{ loc.name }} ({{ loc.city }})
+              </option>
+            </select>
+          </div>
 
           <div class="form-group">
-            <label for="purpose">Purpose / Agenda</label>
+            <label for="room_name">Specific Room</label>
+            <select id="room_name" v-model="form.room_name" :disabled="!form.location" required>
+              <option value="" disabled>Choose an available room...</option>
+              <option 
+                v-for="room in availableRooms" 
+                :key="room" 
+                :value="room"
+              >
+                {{ room }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="booked_by">Reserved By</label>
+            <input 
+              id="booked_by" 
+              type="text" 
+              v-model="form.booked_by" 
+              placeholder="e.g., Gerard Way" 
+              required 
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="booking_date">Date</label>
+            <input 
+              id="booking_date" 
+              type="date" 
+              v-model="form.booking_date" 
+              required 
+            />
+          </div>
+
+          <div class="form-group purpose-group">
+            <div class="label-row">
+              <label for="purpose">Purpose / Agenda</label>
+              <span class="char-counter">{{ form.purpose.length }} / 120</span>
+            </div>
             <textarea 
               id="purpose" 
               v-model="form.purpose" 
-              placeholder="Brief description of the event..." 
-              rows="2"
+              placeholder="Brief description of the event... (max. 120 characters)" 
+              rows="3"
+              maxlength="120"
             ></textarea>
           </div>
 
@@ -285,6 +290,12 @@ const handleSubmit = () => {
   }
 }
 
+.left-column-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
 .image-upload-section {
   display: flex;
   flex-direction: column;
@@ -390,6 +401,15 @@ const handleSubmit = () => {
   gap: 0.35rem;
 }
 
+.purpose-group {
+  flex: 1;
+}
+
+.purpose-group textarea {
+  flex: 1;
+  min-height: 82px;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -444,5 +464,17 @@ input:focus, select:focus, textarea:focus {
   color: #ffffff;
   font-weight: 600;
   cursor: pointer;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.char-counter {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
 }
 </style>
