@@ -102,7 +102,7 @@ const bookings = ref([
     id: 1,
     location: 'Engineering Innovation Center',
     room_name: 'Meeting Room A',
-    booked_by: 'Alex Smith',
+    booked_by: 'Gerard Way',
     booking_date: '2026-11-20',
     start_time: '10:00',
     end_time: '12:00',
