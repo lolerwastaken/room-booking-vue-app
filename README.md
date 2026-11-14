@@ -178,3 +178,6 @@ Open the local URL displayed in your terminal (typically `http://localhost:5173`
 - [ ] **Create Reservation:** Clicking **+ Reserve** and submitting the form adds a new row to Supabase `bookings`.
 - [ ] **Automation Trigger:** Submitting a booking triggers the Make.com scenario and inserts a linked row into `booking_logs` with a matching `booking_id`.
 - [ ] **Mobile Responsiveness:** Resizing the browser below `768px` switches the booking table into stacked mobile cards and adapts the reservation modal.
+
+---
+GitHub Link: https://github.com/lolerwastaken/room-booking-vue-app
