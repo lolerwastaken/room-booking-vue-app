@@ -1,11 +1,10 @@
 <template>
   <div class="layout-wrapper">
-    <!-- Top Header Navigation Bar -->
     <nav class="navbar">
       <div class="nav-left">
         <div class="nav-brand" @click="currentPage = 'dashboard'">
-          <span class="logo-icon">🏢</span>
-          <span class="brand-name">ReserveHub</span>
+          <img src="./assets/7080840.png" class="web-logo" />
+          <span class="web-name">CUreserve</span>
         </div>
         <div class="nav-links">
           <button 
@@ -18,19 +17,18 @@
             :class="['nav-link', { active: currentPage === 'locations' }]"
             @click="currentPage = 'locations'"
           >
-            Locations & Rooms
+            Locations
           </button>
         </div>
       </div>
 
       <div class="nav-right">
         <button class="btn-create" @click="isModalOpen = true">
-          + Create Reservation
+          + Reserve
         </button>
       </div>
     </nav>
 
-    <!-- Main View Switcher -->
     <main class="dashboard-container">
       <BookingList 
         v-if="currentPage === 'dashboard'" 
@@ -43,7 +41,6 @@
       />
     </main>
 
-    <!-- Room Booking Popup Overlay -->
     <BookingForm 
       :is-open="isModalOpen" 
       :locations="locations" 
@@ -54,6 +51,7 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted } from 'vue'
 import BookingForm from './components/BookingForm.vue'
 import BookingList from './components/BookingList.vue'
@@ -81,6 +79,15 @@ const locations = ref([
     description: 'Large capacity lecture hall designed for seminars, keynotes, and events.',
     image: 'https://images.unsplash.com/photo-1431540015161-0bf868a2d407?auto=format&fit=crop&w=600&q=80',
     rooms: ['Main Auditorium', 'Seminar Room 101']
+  },
+  {
+    id: 3,
+    name: 'Library & Learning Commons',
+    city: 'Bangkok',
+    address: 'Phaya Thai Rd, Pathum Wan, Bangkok 10330',
+    description: 'Quiet study environment with private rooms and collaborative spaces.',
+    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80',
+    rooms: ['Study Room 1', 'Study Room 2', 'Group Study Area']
   }
 ])
 
@@ -172,8 +179,10 @@ body {
   gap: 0.5rem;
   font-weight: 700;
   font-size: 1.15rem;
-  color: #4f46e5;
+  color: #fd62fd;
   cursor: pointer;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(165, 165, 165, 0.604);
 }
 
 .nav-links {
@@ -217,8 +226,14 @@ body {
 }
 
 .dashboard-container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
 }
+
+.web-logo {
+  width: 50px;
+  height: 50px;
+}
+
 </style>

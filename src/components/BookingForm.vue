@@ -32,7 +32,7 @@
                 </svg>
               </div>
               <span class="upload-title">Click to Upload Image</span>
-              <span class="upload-subtitle">PNG, JPG, or GIF up to 5MB</span>
+              <span class="upload-subtitle">PNG, JPG, or GIF (up to 5MB)</span>
             </div>
             <button 
               v-if="imagePreview" 
