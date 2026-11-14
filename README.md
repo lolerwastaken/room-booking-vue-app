@@ -114,7 +114,7 @@ Follow these steps to run **CUreserve** locally on your machine.
      '2026-11-20',
      '10:00',
      '12:00',
-     'Team Architecture Sync',
+     'Placeholder Meeting',
      'confirmed'
    );
    ```
